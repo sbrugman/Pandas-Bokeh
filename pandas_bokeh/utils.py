@@ -7,7 +7,7 @@ def _extract_additional_columns(df: DataFrame, hovertool_string: str):
     additional_columns = []
     if hovertool_string is not None:
         if not isinstance(hovertool_string, str):
-            raise ValueError("<hovertool_string> can only be None or a string.")
+            raise TypeError("<hovertool_string> can only be None or a string.")
         # Search for hovertool_string columns in DataFrame:
         for s in re.findall(r"@[^\s\{]+", hovertool_string):
             s = s[1:]
