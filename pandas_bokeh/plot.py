@@ -1110,22 +1110,8 @@ def segmentplot(
     rangetool,
     **kwargs,
 ):
-    return _base_lineplot(
-        linetype="segment",
-        p=p,
-        source=source,
-        data_cols=data_cols,
-        colormap=colormap,
-        hovertool=hovertool,
-        xlabelname=xlabelname,
-        x_axis_type=x_axis_type,
-        plot_data_points=plot_data_points,
-        plot_data_points_size=plot_data_points_size,
-        hovertool_string=hovertool_string,
-        number_format=number_format,
-        rangetool=rangetool,
-        **kwargs,
-    )
+    # https://docs.bokeh.org/en/2.4.2/docs/reference/models/glyphs/segment.html
+    pass
 
 def stepplot(
     p,
@@ -2482,6 +2468,10 @@ class FramePlotMethods(BasePlotMethods):
 
         """
         return self(kind="map", x=x, y=y, **kwds)
+    
+
+    def segment(self, x1, x2, y1, y2, **kwds):
+        return self(kind="segment", x1=x1, x2=x2, y1=y1, y2=y2, **kwds)
 
 
 def _initialize_rangetool(p, x_axis_type, source):
