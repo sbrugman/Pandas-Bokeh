@@ -229,6 +229,7 @@ def plot(  # noqa C901
         "area",
         "pie",
         "map",
+        "segment",
     ]
 
     rangetool_allowed_kinds = ["line", "step"]
@@ -274,14 +275,14 @@ def plot(  # noqa C901
         figure_options["y_axis_label"] = ylabel
     if xlim is not None:
         if not isinstance(xlim, (tuple, list)):
-            raise ValueError("<xlim> must be a list/tuple of form (x_min, x_max).")
+            raise TypeError("<xlim> must be a list/tuple of form (x_min, x_max).")
         elif len(xlim) != 2:
             raise ValueError("<xlim> must be a list/tuple of form (x_min, x_max).")
         else:
             figure_options["x_range"] = xlim
     if ylim is not None:
         if not isinstance(ylim, (tuple, list)):
-            raise ValueError("<ylim> must be a list/tuple of form (y_min, y_max).")
+            raise TypeError("<ylim> must be a list/tuple of form (y_min, y_max).")
         elif len(ylim) != 2:
             raise ValueError("<ylim> must be a list/tuple of form (y_min, y_max).")
         else:
@@ -318,11 +319,11 @@ def plot(  # noqa C901
                 x = x
                 name = ""
             else:
-                raise Exception(
+                raise ValueError(
                     "Length of provided <x> argument does not fit length of DataFrame or Series."
                 )
         else:
-            raise Exception(
+            raise ValueError(
                 "Please provide for the <x> parameter either a column name of the DataFrame/Series or an array of the same length."
             )
     else:
@@ -396,7 +397,7 @@ def plot(  # noqa C901
             data_cols.remove(delete_in_y)
     N_cols = len(data_cols)
     if len(data_cols) == 0:
-        raise Exception(
+        raise ValueError(
             f"The only numeric column is the column {delete_in_y} that is already used on the x-axis."
         )
 
@@ -446,7 +447,7 @@ def plot(  # noqa C901
         old_layout = figure
         p = _get_figure(old_layout)
     else:
-        raise ValueError(
+        raise TypeError(
             "Parameter <figure> has to be of type bokeh.plotting.figure or bokeh.layouts.column."
         )
     if "x_axis_type" not in figure_options:
@@ -488,6 +489,23 @@ def plot(  # noqa C901
             **kwargs,
         )
 
+    if kind == "segment":
+        p, p_rangetool = segmentplot(
+            p,
+            source,
+            data_cols,
+            colormap,
+            hovertool,
+            xlabelname,
+            figure_options["x_axis_type"],
+            plot_data_points,
+            plot_data_points_size,
+            hovertool_string,
+            number_format,
+            rangetool,
+            **kwargs,
+        )
+        
     if kind == "step":
         p, p_rangetool = stepplot(
             p,
@@ -522,7 +540,7 @@ def plot(  # noqa C901
     if kind == "scatter":
 
         if N_cols > 2:
-            raise Exception(
+            raise ValueError(
                 "For scatterplots <x> and <y> values can only be a single column of the DataFrame, not a list of columns. Please specify both <x> and <y> columns for a scatterplot uniquely."
             )
 
@@ -1076,6 +1094,38 @@ def lineplot(
         **kwargs,
     )
 
+
+def segmentplot(
+    p,
+    source,
+    data_cols,
+    colormap,
+    hovertool,
+    xlabelname,
+    x_axis_type,
+    plot_data_points,
+    plot_data_points_size,
+    hovertool_string,
+    number_format,
+    rangetool,
+    **kwargs,
+):
+    return _base_lineplot(
+        linetype="segment",
+        p=p,
+        source=source,
+        data_cols=data_cols,
+        colormap=colormap,
+        hovertool=hovertool,
+        xlabelname=xlabelname,
+        x_axis_type=x_axis_type,
+        plot_data_points=plot_data_points,
+        plot_data_points_size=plot_data_points_size,
+        hovertool_string=hovertool_string,
+        number_format=number_format,
+        rangetool=rangetool,
+        **kwargs,
+    )
 
 def stepplot(
     p,
