@@ -34,6 +34,7 @@ if pd.__version__ >= "0.25":
         "pie",
         "hist",
         "map",
+        "segment",
     )
 
     pd.DataFrame.plot._dataframe_kinds = ("map", "scatter")
